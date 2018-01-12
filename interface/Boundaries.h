@@ -10,6 +10,7 @@
 */
 
 #include <vector>
+#include <iostream>
 #include <algorithm>
 
 template <typename T>
@@ -18,9 +19,11 @@ class Boundaries{
 
         Boundaries(){};
         Boundaries(std::vector<T>& bins) {setBins(bins);}
+        Boundaries(uint nbins, T xmin, T xmax) {setBins(nbins, xmin, xmax);}
         ~Boundaries(){};
 
         void setBins(std::vector<T>& bins);
+        void setBins(uint nbins, T xmin, T xmax);
         typename std::vector<T>::size_type size()  {return bins_.size();} // size of the member vector
         typename std::vector<T>::size_type nBins() {return size()-1;}     // -1 because these are the boundaries
 
@@ -29,6 +32,7 @@ class Boundaries{
         int findBin (T value) const;
 
         void printVector (const std::vector<T>& bins) const;
+        void printBoundaries () const {printVector(bins_);};
 
     private:
         std::vector<T> bins_;
@@ -44,8 +48,36 @@ void Boundaries<T>::setBins(std::vector<T>& bins)
     {
         std::cout << " ** Boundaries : [WARNING] : the following bins are not sorted " << std::endl; 
         printVector(bins_);
-        std::cout << " ** going to sort them" << std::endl;
+        std::cout << " ** ... will be sorted" << std::endl;
         std::sort(bins_.begin(), bins_.end());
+    }
+    auto unique = std::unique(bins_.begin(), bins_.end());
+    if (unique != bins_.end())
+    {
+        std::cout << " ** Boundaries : [WARNING] : the following bins are not unique " << std::endl; 
+        printVector(bins_);
+        std::cout << " ** ... will be reduced to a unique set " << std::endl;
+        bins_.resize(unique - bins_.begin());
+    }
+    
+
+}
+
+template <typename T>
+void Boundaries<T>::setBins(uint nbins, T xmin, T xmax)
+{
+    bins_ = std::vector<T> (nbins+1, T());
+    T step = (xmax - xmin) / nbins; // FIXME : what will happend when templated on ints?
+    for (uint ib = 0; ib < bins_.size(); ++ib)
+        bins_.at(ib) = xmin + ib * step;
+
+    auto unique = std::unique(bins_.begin(), bins_.end());
+    if (unique != bins_.end())
+    {
+        std::cout << " ** Boundaries : [WARNING] : the following bins are not unique " << std::endl; 
+        printVector(bins_);
+        std::cout << " ** ... will be reduced to a unique set " << std::endl;
+        bins_.resize(unique - bins_.begin());
     }
 }
 

@@ -1,84 +1,46 @@
 #ifndef PATTERNUTILS_H
 #define PATTERNUTILS_H
 
-/*
-** class  : PatternUtils
-** author : L. Cadamuro (UF)
-** brief  : utilities for building and booking EMTF patterns
-** notes  : - a "PatternElement" is a combination of two values (first = theta and second = phi)
-**          - a "Pattern" is a collection of an arbitrary (but fixed) number of "PatternElement"
-*/
-
-#include <utility>
-#include <array>
+#include "Pattern.h"
+#include "Hit.h"
 #include <vector>
+#include <iostream>
 
-namespace PatternUtils {
-
-    // ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - 
-
-    template <typename T1 = int, typename T2 = int>           using PatternElement = std::pair<T1, T2> ;
-    template <size_t S, typename T1 = int, typename T2 = int> using Pattern        = std::array<PatternElement<T1,T2>, S> ;
-
-    // ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - 
-
-    struct hit {
-        short   endcap;
-        short   station;
-        short   ring;
-        short   sector;
-        short   subsector;
-        short   chamber;
-        short   cscid;
-        short   bx;
-        short   type;
-        short   neighbor;
-        short   zonecode;
-        short   zonehit;
-        short   strip;
-        short   wire;
-        short   roll;
-        short   pattern;
-        short   quality;
-        short   bend;
-        short   time;
-        short   fr;
-        int     emtf_phi;
-        int     emtf_theta;
-        float   sim_phi;
-        float   sim_theta;
-        float   sim_eta;
-        float   sim_r;
-        float   sim_z;
-        int     sim_tp1;
-        int     sim_tp2;
-    };
-
-    // ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - 
+namespace PatternUtils
+{
 
     template <size_t S>
-    class PatternFormerBase {
-        public:
-            PatternFormerBase(){};
-            ~PatternFormerBase(){};
-            virtual void formPattern(std::vector<hit>& vhit) = 0;
-            Pattern<S> getPattern() const {return pattern_;}
-        protected:
-            Pattern<S> pattern_;
-    };
+    unsigned int nValidHits(Pattern<S> p)
+    {
+        unsigned int nhits = 0;
+        for (auto& pe : p)
+            if (pe.first >= 0 && pe.second >= 0)
+                ++nhits;
+        return nhits;
+    }
 
-    // ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - 
+    void dumpHits(const std::vector<Hit>& vhit)
+    {
+        const char* tname[] = {
+            "DT",
+            "CSC",
+            "RPC",
+            "GEM"            
+        };
 
-    // a pattern made only of CSCs hits
-    class CSCPattern : public PatternFormerBase<4> {
-        public:
-            CSCPattern(){};
-            ~CSCPattern(){};
-            void formPattern(std::vector<hit>& vhit);
-    };
-
-
-
+        for (uint ihit = 0; ihit < vhit.size(); ++ihit)
+        {
+            const Hit& hit = vhit.at(ihit);
+            std::cout << "Hit "           << ihit
+                      << " , type : "       << tname[hit.type] << "[" << hit.type << "]"
+                      << " , station : "    << hit.station
+                      << " , ring : "       << hit.ring
+                      << " , sector : "     << hit.sector
+                      << " , emtf_theta : " << hit.emtf_theta
+                      << " , emtf_phi : "   << hit.emtf_phi
+                      << std::endl;
+        }
+    }
 }
 
 #endif
