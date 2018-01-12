@@ -91,6 +91,9 @@ int main()
             if (HitCollections.at(isec).empty()) continue;
             CSCPatternCollection cscpc = csc_patt_former.formPatterns(HitCollections.at(isec), theta_phi_seg);
             PatternCollections.at(isec) = cscpc;
+
+            for (auto& patt : cscpc)
+                cout << CSCPatternFormer::pattern_toString(patt) << endl;
         }
     }
 

@@ -1,9 +1,12 @@
 #include "CSCPatternFormer.h"
+#include "SpecialPatternElements.h"
 
 // given a set of hits as input, produce all the possible patterns in output
 // hits are associated an index according to the input detector geometry (bins of input coordinates to determine the PatternElement)
 
 typedef std::vector<PatternElement<>> PatternElementCollection;
+
+namespace sep = SpecialPatternElements;
 
 // a CSC pattern is formed by 4 pattern elements - one per each 
 CSCPatternCollection CSCPatternFormer::formPatterns(const std::vector<Hit>& vhit, const DetectorSegmentationBase& segmentation)
@@ -23,7 +26,7 @@ CSCPatternCollection CSCPatternFormer::formPatterns(const std::vector<Hit>& vhit
     // if a hit is missing: introduce a dummy pattern
     for (unsigned int is = 0; is < pe_hits.size(); ++is)
         if (pe_hits.at(is).size() == 0)
-            pe_hits.at(is).push_back(missing_element_);
+            pe_hits.at(is).push_back(sep::missing_element_);
 
     unsigned int npattern = 1;
     for (unsigned int is = 0; is < pe_hits.size(); ++is)

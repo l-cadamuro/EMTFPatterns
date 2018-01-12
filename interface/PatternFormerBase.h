@@ -18,6 +18,7 @@
 #include "Hit.h"
 #include "Subsystem.h"
 #include "DetectorSegmentationBase.h"
+
 // ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - ------ - 
 
 template<size_t S>
@@ -28,7 +29,7 @@ template <size_t S>
 class PatternFormerBase {
     public:
 
-        static const PatternElement<> missing_element_;
+        // static const PatternElement<> missing_element_;
 
         PatternFormerBase(){};
         ~PatternFormerBase(){};
@@ -43,8 +44,8 @@ class PatternFormerBase {
     //     Pattern<S> pattern_;
 };
 
-template <size_t S>
-const PatternElement<> PatternFormerBase<S>::missing_element_  = {-999, -999}; // code used for a missing pattern element
+// template <size_t S>
+// const PatternElement<> PatternFormerBase<S>::missing_element_  = {-999, -999}; // code used for a missing pattern element
 
 template <size_t S>
 std::string PatternFormerBase<S>::patternElement_toString(PatternElement<> pe)

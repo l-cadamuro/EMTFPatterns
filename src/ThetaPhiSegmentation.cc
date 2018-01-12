@@ -1,4 +1,7 @@
 #include "ThetaPhiSegmentation.h"
+#include "SpecialPatternElements.h"
+
+namespace sep = SpecialPatternElements;
 
 PatternElement<> ThetaPhiSegmentation::getPatternElement (const Hit& hit) const
 {
@@ -18,7 +21,7 @@ PatternElement<> ThetaPhiSegmentation::getPE_EMTFCoords (const Hit& hit) const
                 bins_CSC_theta .at(hit.station-1).findBin(hit.emtf_theta),
                 bins_CSC_phi   .at(hit.station-1).findBin(hit.emtf_phi)
             );
-    return invalid_pattern_element_;
+    return sep::invalid_element_;
 }
 
 PatternElement<> ThetaPhiSegmentation::getPE_AngleDegCoords (const Hit& hit) const
@@ -29,5 +32,5 @@ PatternElement<> ThetaPhiSegmentation::getPE_AngleDegCoords (const Hit& hit) con
                 bins_CSC_theta .at(hit.station-1).findBin(hit.sim_theta),
                 bins_CSC_phi   .at(hit.station-1).findBin(hit.sim_phi)
             );
-    return invalid_pattern_element_;
+    return sep::invalid_element_;
 }
