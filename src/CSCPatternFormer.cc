@@ -1,5 +1,6 @@
 #include "CSCPatternFormer.h"
 #include "SpecialPatternElements.h"
+#include <algorithm>
 
 // given a set of hits as input, produce all the possible patterns in output
 // hits are associated an index according to the input detector geometry (bins of input coordinates to determine the PatternElement)
