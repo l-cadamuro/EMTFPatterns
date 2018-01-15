@@ -9,6 +9,8 @@
 namespace PatternUtils
 {
 
+    // --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - 
+    // get the number of valid hits in a pattern
     template <size_t S>
     unsigned int nValidHits(Pattern<S> p)
     {
@@ -19,6 +21,16 @@ namespace PatternUtils
         return nhits;
     }
 
+    // --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - 
+
+    // template <size_t S>
+    // void prunePatterns(PatterCollection<S>& pcoll)
+    // {
+    //   vec.erase(std::remove(vec.begin(), vec.end(), number_in), vec.end());
+    // }
+
+    // --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - 
+    // print on screen the number and quality of the hits
     void dumpHits(const std::vector<Hit>& vhit)
     {
         const char* tname[] = {
@@ -41,6 +53,9 @@ namespace PatternUtils
                       << std::endl;
         }
     }
+
+    // --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - --- - 
+
 }
 
 #endif

@@ -7,6 +7,7 @@
 typedef std::vector<PatternElement<>> PatternElementCollection;
 
 namespace sep = SpecialPatternElements;
+using namespace std;
 
 // a CSC pattern is formed by 4 pattern elements - one per each 
 CSCPatternCollection CSCPatternFormer::formPatterns(const std::vector<Hit>& vhit, const DetectorSegmentationBase& segmentation)
@@ -41,6 +42,15 @@ CSCPatternCollection CSCPatternFormer::formPatterns(const std::vector<Hit>& vhit
             for (unsigned int iS3 = 0; iS3 < pe_hits.at(2).size(); ++iS3)
                 for (unsigned int iS4 = 0; iS4 < pe_hits.at(3).size(); ++iS4)
                 {
+                    int nvalidPE = (
+                        static_cast<int>(sep::isValidPatternElement(pe_hits.at(0).at(iS1))) + 
+                        static_cast<int>(sep::isValidPatternElement(pe_hits.at(1).at(iS2))) + 
+                        static_cast<int>(sep::isValidPatternElement(pe_hits.at(2).at(iS3))) +
+                        static_cast<int>(sep::isValidPatternElement(pe_hits.at(3).at(iS4)))
+                    );
+                    if (nvalidPE < 0 || nvalidPE > 4) cout << "OOOOOOOOO" << endl;
+                    if (nvalidPE < min_valid_el_) continue;
+
                     patterns.emplace_back(Pattern<4> {{
                         pe_hits.at(0).at(iS1),
                         pe_hits.at(1).at(iS2),

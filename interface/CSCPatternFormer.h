@@ -15,9 +15,13 @@ using CSCPatternCollection = PatternCollection<4>;
 // a pattern made only of CSCs hits
 class CSCPatternFormer : public PatternFormerBase<4> {
     public:
-        CSCPatternFormer(){};
+        CSCPatternFormer(){min_valid_el_ = 0;};
         ~CSCPatternFormer(){};
         CSCPatternCollection formPatterns(const std::vector<Hit>& vhit, const DetectorSegmentationBase& segmentation);
+        void setMinValidElements(int mve) {min_valid_el_ = mve;}
+    private:
+        int min_valid_el_;
+
 };
 
 #endif

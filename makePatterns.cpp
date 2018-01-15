@@ -7,6 +7,8 @@
 #include "Hit.h"
 #include "TreeToHit.h"
 #include "PatternUtils.h"
+#include "PatternLogger.h"
+#include "PhaseSpace.h"
 #include "MuonTree.h"
 #include "TH1F.h"
 #include "TCanvas.h"
@@ -30,7 +32,7 @@ namespace putl = PatternUtils;
 // 5: -125.5  ..  -44.5
 // 6: -65.5   ..   15.5
 
-// c++ -lm -o makePatterns src/*.cc makePatterns_test.cpp `root-config --glibs --cflags` -I interface/
+// c++ -lm -o makePatterns src/*.cc makePatterns.cpp `root-config --glibs --cflags` -I interface/
 
 int main()
 {
@@ -63,6 +65,18 @@ int main()
     // the hits instead must be divided in six collections, one per sector
 
     CSCPatternFormer csc_patt_former;
+    csc_patt_former.setMinValidElements(3); // at least 3 hits in a pattern
+
+    // what we need to record properties of the patterns
+    std::array < PatternLogger<CSCPatternFormer::patt_size> , 6 > patt_loggers; // one per each sector
+    // PatternLogger<CSCPatternFormer::patt_size>::debug_ = true;
+    // patt_loggers.at(0).setDebug(true);
+
+    PhaseSpace ps;
+    ps.setUseOneOverPt(true);
+    ps.ptBins().setBins(100, 0, 0.5);
+    ps.etaBins().setBins(100, 1.2, 2.5);
+    ps.phiBins().setBins(100, -TMath::Pi(), TMath::Pi());
 
     cout << "... event loop starting" << endl;
 
@@ -78,6 +92,12 @@ int main()
         std::array<HitCollection,        6> HitCollections;
         std::array<CSCPatternCollection, 6> PatternCollections;
 
+        // check the gen particle properties
+        float gen_pt  = mt.vp_pt->at(0);
+        float gen_eta = mt.vp_eta->at(0);
+        float gen_phi = mt.vp_phi->at(0);
+        auto ps_elem = ps.getPhaseSpaceElement(gen_pt, gen_eta, gen_phi);
+
         // prepare the hits
         for (unsigned int ihit = 0; ihit < mt.vh_size; ++ihit){
             Hit h = TreeToHit::tree_to_hit(&mt, ihit);
@@ -92,10 +112,20 @@ int main()
             CSCPatternCollection cscpc = csc_patt_former.formPatterns(HitCollections.at(isec), theta_phi_seg);
             PatternCollections.at(isec) = cscpc;
 
-            for (auto& patt : cscpc)
-                cout << CSCPatternFormer::pattern_toString(patt) << endl;
+            patt_loggers.at(isec).log(cscpc, ps_elem);
+
+            // for (auto& patt : cscpc)
+            //     if (putl::nValidHits(patt) < 3)
+            //         cout << "Too few valid hits " << putl::nValidHits(patt) << endl;
+
+            // for printing the patterns
+            // for (auto& patt : cscpc)
+            //     cout << CSCPatternFormer::pattern_toString(patt) << endl;
         }
     }
 
     cout << "... loop done" << endl;
+    cout << "... I genenerated the following patterns for each sector" << endl;
+    for (int i = 0; i < patt_loggers.size(); ++i)
+        cout << "S" << i+1 << " " << patt_loggers.at(i).getNpatterns() << endl;
 }

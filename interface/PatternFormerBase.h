@@ -38,6 +38,8 @@ class PatternFormerBase {
         static std::string patternElement_toString(PatternElement<> pe);
         static std::string pattern_toString(Pattern<S> p);
 
+        static const size_t patt_size = S; // useful to retrieve pattern size in other code, use <DerivedClass>::patt_size ;
+
         // bool operator == (const PatternFormerBase<S>& rhs) const;
         // Pattern<S> getPattern() const {return pattern_;}
     // protected:

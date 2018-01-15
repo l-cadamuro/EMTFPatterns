@@ -15,6 +15,10 @@ namespace SpecialPatternElements
 {
     static const PatternElement<> missing_element_ (-999, -999);  // when there is no hit in that specific spot
     static const PatternElement<> invalid_element_ (-888, -888);  // when the hit is outside the range defined in the segmentation
+
+    static bool isValidPatternElement (const PatternElement<> pe){
+        return (pe.first >= 0 && pe.second >= 0);
+    }
 }
 
 #endif
