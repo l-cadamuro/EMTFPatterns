@@ -32,7 +32,7 @@ namespace putl = PatternUtils;
 // 5: -125.5  ..  -44.5
 // 6: -65.5   ..   15.5
 
-// c++ -lm -o makePatterns src/*.cc makePatterns.cpp `root-config --glibs --cflags` -I interface/
+// c++ -lm -o makePatterns.exe src/*.cc makePatterns.cpp `root-config --glibs --cflags` -I interface/
 
 int main()
 {
