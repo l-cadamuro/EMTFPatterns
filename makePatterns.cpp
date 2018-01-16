@@ -41,7 +41,7 @@ int main()
 {
     // FIXME: stuff to overload from command line / config
     std::string inputFileList = "inputFiles/SingleMu_PU0.txt";
-    unsigned int maxEvts = -1; // -1 for all
+    int maxEvts = -1; // -1 for all
     float min_gen_mu_pt = 5.0;
 
     // -----------------------------------------------
